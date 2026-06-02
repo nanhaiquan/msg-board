@@ -2,226 +2,218 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="siteTitle">留言板</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>南海山</title>
 <style>
-:root {
-  --accent: #4A90D9;
-  --accent-light: #EBF3FB;
-  --bg: #FAFAFA;
-  --card: #FFFFFF;
-  --fg: #1A1A1A;
-  --fg2: #6B6B6B;
-  --fg3: #B0B0B0;
-  --border: #E8E8E8;
-  --radius: 8px;
-}
 * { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#0a0a0a; }
 body {
-  font: 400 14px/1.6 -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
-  background: var(--bg); color: var(--fg); min-height: 100vh;
-}
-/* 导航 */
-nav {
-  background: var(--card); border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 10;
-}
-.nav-inner {
-  max-width: 680px; margin: 0 auto; padding: 0 20px;
-  height: 48px; display: flex; align-items: center; justify-content: space-between;
-}
-.nav-title { font-weight: 700; font-size: 15px; color: var(--accent); }
-.nav-title span { color: var(--fg); }
-.nav-links { display: flex; gap: 20px; }
-.nav-links a { text-decoration: none; color: var(--fg2); font-size: 13px; transition: color .2s; }
-.nav-links a:hover { color: var(--accent); }
-
-/* 主内容 */
-.main { max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
-.header { margin-bottom: 32px; }
-.header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-.header p { color: var(--fg2); font-size: 14px; }
-
-/* 输入区 */
-.input-area {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 16px; margin-bottom: 24px;
-}
-.input-area input, .input-area textarea {
-  width: 100%; border: none; outline: none; font: inherit;
-  resize: vertical; min-height: 40px; font-size: 14px;
-}
-.input-area input { border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px; }
-.input-area textarea { min-height: 60px; }
-.input-bottom {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 8px;
-}
-.char-count { font-size: 12px; color: var(--fg3); }
-.btn-send {
-  background: var(--accent); color: #fff; border: none;
-  padding: 6px 20px; border-radius: 6px; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: opacity .2s;
-}
-.btn-send:hover { opacity: .85; }
-.btn-send:disabled { opacity: .4; cursor: not-allowed; }
-
-/* 留言列表 */
-.msg-list { display: flex; flex-direction: column; gap: 0; }
-.msg-item {
-  padding: 16px 0; border-bottom: 1px solid var(--border);
-}
-.msg-item:last-child { border-bottom: none; }
-.msg-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
-.msg-name { font-weight: 600; font-size: 13px; }
-.msg-time { font-size: 11px; color: var(--fg3); }
-.msg-content { font-size: 14px; line-height: 1.7; word-break: break-word; }
-
-/* 空状态 */
-.empty { text-align: center; color: var(--fg3); padding: 48px 0; font-size: 14px; }
-
-/* Footer */
-footer {
-  text-align: center; padding: 24px 20px;
-  color: var(--fg3); font-size: 12px;
-  border-top: 1px solid var(--border);
+  font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+  color:#e8e8e8;
 }
 
-/* About Page */
-.about-content { max-width: 600px; }
-.about-content p { color: var(--fg2); font-size: 14px; line-height: 1.8; margin-bottom: 16px; }
+/* ─── 页面容器 ─── */
+.pages {
+  display:flex; height:100%; width:200%;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+.pages.shift { transform:translateX(-50%); }
+.page { width:50%; height:100%; overflow-y:auto; }
+.page::-webkit-scrollbar { width:0; }
 
-@media (max-width: 480px) {
-  .main { padding: 24px 16px 60px; }
-  .header h1 { font-size: 20px; }
+/* ─── 导航栏 ─── */
+.nav {
+  position:sticky; top:0; z-index:10;
+  padding:0 28px; height:52px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(10,10,10,.88); backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.nav-l { display:flex; align-items:center; gap:24px; }
+.nav-l h1 { font-size:14px; font-weight:500; letter-spacing:2px; opacity:.7; }
+.nav-l h1 em { font-style:normal; color:#fff; opacity:1; }
+.nav-tabs { display:flex; gap:2px; }
+.nav-tabs button {
+  padding:6px 14px; border:none; border-radius:6px;
+  background:transparent; color:rgba(255,255,255,.4); font-size:13px;
+  cursor:pointer; transition:all .2s; letter-spacing:.5px;
+}
+.nav-tabs button:hover { color:rgba(255,255,255,.7); }
+.nav-tabs button.active { background:rgba(255,255,255,.08); color:#fff; }
+
+/* ─── 社区页面 ─── */
+.scene { max-width:600px; margin:0 auto; padding:28px 20px 80px; }
+.scene h2 { font-size:15px; font-weight:500; letter-spacing:1px; opacity:.6; margin-bottom:20px; }
+
+.in-box {
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
+  border-radius:10px; padding:14px; margin-bottom:20px;
+}
+.in-box input, .in-box textarea {
+  width:100%; border:none; background:transparent; outline:none;
+  font:inherit; color:#e8e8e8; font-size:13px; resize:none;
+}
+.in-box input { border-bottom:1px solid rgba(255,255,255,.06); padding-bottom:8px; margin-bottom:8px; }
+.in-box textarea { min-height:50px; }
+.in-box ::placeholder { color:rgba(255,255,255,.2); }
+
+.in-bar { display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
+.in-bar .c { font-size:11px; color:rgba(255,255,255,.2); }
+.in-bar button {
+  padding:6px 18px; border:none; border-radius:6px;
+  background:rgba(255,255,255,.1); color:#fff; font-size:12px;
+  cursor:pointer; transition:all .15s;
+}
+.in-bar button:hover { background:rgba(255,255,255,.18); }
+.in-bar button:disabled { opacity:.3; cursor:not-allowed; }
+
+.feed { display:flex; flex-direction:column; gap:0; }
+.post { padding:14px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.post:last-child { border:none; }
+.pm { display:flex; gap:8px; align-items:center; margin-bottom:3px; }
+.pn { font-size:12px; font-weight:500; opacity:.7; }
+.pt { font-size:11px; opacity:.3; }
+.pc { font-size:13px; line-height:1.6; opacity:.8; word-break:break-word; }
+.empty { text-align:center; opacity:.2; padding:60px 0; font-size:13px; }
+
+/* ─── 工作台页面 ─── */
+.ws { padding:28px 20px; }
+.ws h2 { font-size:15px; font-weight:500; letter-spacing:1px; opacity:.6; margin-bottom:20px; }
+
+.cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.card {
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+  border-radius:10px; padding:24px; cursor:pointer;
+  transition:all .25s; min-height:110px;
+}
+.card:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.1); }
+.card .i { font-size:20px; margin-bottom:8px; display:block; }
+.card h3 { font-size:14px; font-weight:500; margin-bottom:3px; }
+.card p { font-size:12px; opacity:.4; line-height:1.5; }
+
+/* ─── 切换按钮 ─── */
+.sw {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:50;
+  display:flex; gap:4px; background:rgba(255,255,255,.08);
+  backdrop-filter:blur(12px); border-radius:20px; padding:4px;
+}
+.sw button {
+  padding:6px 18px; border:none; border-radius:16px;
+  background:transparent; color:rgba(255,255,255,.4); font-size:12px;
+  cursor:pointer; transition:all .2s; letter-spacing:.5px;
+}
+.sw button.active { background:rgba(255,255,255,.15); color:#fff; }
+
+#toast {
+  position:fixed; bottom:76px; left:50%; transform:translateX(-50%);
+  background:rgba(255,255,255,.12); backdrop-filter:blur(8px);
+  color:#fff; padding:7px 16px; border-radius:8px;
+  font-size:12px; z-index:60; opacity:0; transition:opacity .2s;
+  pointer-events:none;
+}
+#toast.on { opacity:1; }
+
+@media (max-width:480px) {
+  .nav { padding:0 16px; }
+  .nav-tabs button { padding:6px 10px; font-size:12px; }
+  .scene, .ws { padding:16px; }
+  .cards { grid-template-columns:1fr; }
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <div class="nav-title"><span id="navPrefix">✦ </span><span id="navTitle">留言板</span></div>
-    <div class="nav-links">
-      <a href="/">首页</a>
-      <a href="/about">关于</a>
+<div class="pages" id="pages">
+  <!-- 页面1：社区 -->
+  <div class="page">
+    <div class="nav">
+      <div class="nav-l">
+        <h1>南海<em>山</em></h1>
+        <div class="nav-tabs">
+          <button class="active" onclick="go(1)">社区</button>
+          <button onclick="go(2)">工作台</button>
+        </div>
+      </div>
+    </div>
+    <div class="scene">
+      <h2>社区</h2>
+      <div class="in-box">
+        <input id="inpN" placeholder="你的名字" maxlength="20">
+        <textarea id="inpC" placeholder="说点什么…" maxlength="1000"></textarea>
+        <div class="in-bar">
+          <span class="c"><span id="cc">0</span>/1000</span>
+          <button id="btnSend">发布</button>
+        </div>
+      </div>
+      <div class="feed" id="feed"><div class="empty">加载中…</div></div>
     </div>
   </div>
-</nav>
 
-<div class="main" id="app"></div>
+  <!-- 页面2：工作台 -->
+  <div class="page">
+    <div class="nav">
+      <div class="nav-l">
+        <h1>南海<em>山</em></h1>
+        <div class="nav-tabs">
+          <button onclick="go(1)">社区</button>
+          <button class="active" onclick="go(2)">工作台</button>
+        </div>
+      </div>
+    </div>
+    <div class="ws">
+      <h2>工作台</h2>
+      <div class="cards">
+        <div class="card"><span class="i">▶</span><h3>视频</h3><p>搜索B站内容</p></div>
+        <div class="card"><span class="i">○</span><h3>AI 助手</h3><p>自备Key多模型</p></div>
+        <div class="card"><span class="i">◐</span><h3>知识库</h3><p>Obsidian对接</p></div>
+        <div class="card"><span class="i">•••</span><h3>后台</h3><p>管理·审核</p></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<footer>© 2026 · 匿名留言板</footer>
+<div class="sw">
+  <button class="active" onclick="go(1)">社区</button>
+  <button onclick="go(2)">工作台</button>
+</div>
+<div id="toast"></div>
 
 <script>
-// ─── 配置（可改） ───
-const SITE = {
-  title: '留言板',
-  desc: '留下你想说的话',
-  accent: '#4A90D9',
-};
-// ──────────────────
-
-const app = document.getElementById('app');
-const page = location.pathname;
-
-if (page === '/about') {
-  document.getElementById('navTitle').textContent = '关于';
-  app.innerHTML = '<div class="about-content"><h1>关于</h1><p>这是一个简约的匿名留言板。无需注册，任何人都可以留下想说的话。</p><p>北欧极简设计，白灰基底，一色点缀。所有数据存储在云端。</p></div>';
-} else {
-  document.getElementById('navTitle').textContent = SITE.title;
-  document.title = SITE.title;
-  renderBoard();
+function go(n) {
+  document.getElementById('pages').classList.toggle('shift', n===2);
+  document.querySelectorAll('.nav-tabs button, .sw button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`.nav-tabs button:nth-child(${n}), .sw button:nth-child(${n})`).forEach(b => b.classList.add('active'));
 }
 
-function renderBoard() {
-  app.innerHTML = `
-    <div class="header">
-      <h1>${SITE.title}</h1>
-      <p>${SITE.desc}</p>
-    </div>
-    <div class="input-area">
-      <input id="inpName" placeholder="你的名字（留空为匿名）" maxlength="20">
-      <textarea id="inpContent" placeholder="写点什么…" maxlength="1000"></textarea>
-      <div class="input-bottom">
-        <span class="char-count"><span id="charCount">0</span>/1000</span>
-        <button class="btn-send" id="btnSend">发布</button>
-      </div>
-    </div>
-    <div class="msg-list" id="msgList">
-      <div class="empty">加载中…</div>
-    </div>
-  `;
+// 社区
+document.getElementById('btnSend').onclick = sendMsg;
+document.getElementById('inpC').oninput = () => document.getElementById('cc').textContent = document.getElementById('inpC').value.length;
+load();
 
-  document.getElementById('inpContent').addEventListener('input', () => {
-    document.getElementById('charCount').textContent =
-      document.getElementById('inpContent').value.length;
-  });
-
-  document.getElementById('btnSend').addEventListener('click', sendMsg);
-  loadMsgs();
+async function load() {
+  try { const r=await fetch('/api/msgs'); const m=await r.json(); render(m); } catch {}
 }
-
-async function loadMsgs() {
-  try {
-    const r = await fetch('/api/msgs');
-    const msgs = await r.json();
-    renderMsgs(msgs);
-  } catch { /* ignore */ }
+function render(msgs) {
+  const el=document.getElementById('feed');
+  if(!msgs.length){el.innerHTML='<div class=\"empty\">还没有留言</div>';return;}
+  el.innerHTML=msgs.map(m=>`<div class="post"><div class="pm"><span class="pn">${esc(m.name||'匿名')}</span><span class="pt">${ta(new Date(m.time))}</span></div><div class="pc">${esc(m.content)}</div></div>`).join('');
 }
-
-function renderMsgs(msgs) {
-  const el = document.getElementById('msgList');
-  if (!msgs.length) {
-    el.innerHTML = '<div class="empty">还没有留言，来说点什么吧</div>';
-    return;
-  }
-  el.innerHTML = msgs.map(m => `
-    <div class="msg-item">
-      <div class="msg-meta">
-        <span class="msg-name" style="color:var(--accent)">${esc(m.name || '匿名')}</span>
-        <span class="msg-time">${timeAgo(new Date(m.time))}</span>
-      </div>
-      <div class="msg-content">${esc(m.content)}</div>
-    </div>
-  `).join('');
-}
-
 async function sendMsg() {
-  const name = document.getElementById('inpName').value.trim();
-  const content = document.getElementById('inpContent').value.trim();
-  if (!content) return;
-
-  const btn = document.getElementById('btnSend');
-  btn.disabled = true; btn.textContent = '发布中…';
-
+  const n=document.getElementById('inpN').value.trim(), c=document.getElementById('inpC').value.trim();
+  if(!c) return;
+  const btn=document.getElementById('btnSend'); btn.disabled=true; btn.textContent='…';
   try {
-    const r = await fetch('/api/msgs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, content }),
-    });
-    if (!r.ok) { alert('发布失败'); return; }
-    document.getElementById('inpName').value = '';
-    document.getElementById('inpContent').value = '';
-    document.getElementById('charCount').textContent = '0';
-    loadMsgs();
-  } catch { alert('网络错误'); }
-  finally { btn.disabled = false; btn.textContent = '发布'; }
+    const r=await fetch('/api/msgs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,content:c})});
+    if(r.status===403){const d=await r.json();toast(d.error||'被拒');return;}
+    if(!r.ok){toast('失败');return;}
+    document.getElementById('inpN').value=''; document.getElementById('inpC').value=''; document.getElementById('cc').textContent='0';
+    load();
+  }catch{toast('网络错误')}
+  finally{btn.disabled=false;btn.textContent='发布';}
 }
-
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s; return d.innerHTML;
-}
-
-function timeAgo(d) {
-  const s = (Date.now() - d) / 1000;
-  if (s < 60) return '刚刚';
-  if (s < 3600) return Math.floor(s/60) + '分钟前';
-  if (s < 86400) return Math.floor(s/3600) + '小时前';
-  return Math.floor(s/86400) + '天前';
-}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function ta(d){const s=(Date.now()-d)/1000;if(s<60)return'刚刚';if(s<3600)return Math.floor(s/60)+'分钟前';if(s<86400)return Math.floor(s/3600)+'小时前';return Math.floor(s/86400)+'天前';}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2000);}
 </script>
 </body>
 </html>
