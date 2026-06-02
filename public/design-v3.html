@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南海山 · 设计探索</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; background:#111; min-height:100vh; }
+
+/* ─── Loading Screen ─── */
+#loading {
+  position:fixed; inset:0; z-index:999;
+  background:#0a0a0a;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity .8s, visibility .8s;
+}
+#loading.done { opacity:0; visibility:hidden; }
+#loading .logo {
+  font-size:28px; font-weight:300; letter-spacing:8px; color:#fff;
+  opacity:0; animation:logoIn 1.2s ease-out forwards;
+}
+#loading .bar {
+  width:0; height:1px; background:rgba(255,255,255,.3);
+  margin-top:24px; animation:barGrow 1.8s ease-in-out .6s forwards;
+}
+#loading .hint {
+  font-size:11px; color:rgba(255,255,255,.2); letter-spacing:4px;
+  margin-top:40px; animation:fadeIn 1s 1.5s forwards; opacity:0;
+}
+@keyframes logoIn {
+  0% { opacity:0; transform:translateY(10px); }
+  100% { opacity:1; transform:translateY(0); }
+}
+@keyframes barGrow {
+  0% { width:0; }
+  100% { width:160px; }
+}
+@keyframes fadeIn { to { opacity:1; } }
+
+/* ─── App ─── */
+#app { opacity:0; transition:opacity .6s; }
+#app.show { opacity:1; }
+
+/* ─── 深色主题 ─── */
+:root {
+  --bg: #0a0a0a; --bg2: #111; --bg3: #1a1a1a;
+  --fg: #e8e8e8; --fg2: #666; --fg3: #444;
+  --accent: #fff; --line: #1a1a1a;
+}
+
+/* ─── Header ─── */
+header {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:0 40px; height:60px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(180deg, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%);
+  pointer-events:none;
+}
+header * { pointer-events:auto; }
+header h1 { font-size:13px; font-weight:400; letter-spacing:4px; color:var(--fg); opacity:.6; }
+header h1 em { font-style:normal; color:var(--accent); opacity:1; }
+header nav { display:flex; gap:2px; }
+header nav a {
+  padding:8px 16px; font-size:12px; color:var(--fg2); text-decoration:none;
+  letter-spacing:1px; transition:color .3s; cursor:pointer; position:relative;
+}
+header nav a:hover { color:var(--fg); }
+header nav a.active { color:var(--accent); }
+
+/* ─── Hero ─── */
+.hero {
+  height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+  position:relative; overflow:hidden;
+  background: var(--bg);
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 40%, rgba(255,255,255,.03) 0%, transparent 70%);
+}
+.hero h2 {
+  font-size:clamp(32px,6vw,64px); font-weight:200; letter-spacing:12px;
+  color:var(--fg); position:relative; margin-bottom:16px;
+}
+.hero p {
+  font-size:13px; color:var(--fg2); letter-spacing:3px;
+  font-weight:300; position:relative;
+}
+.hero .cta {
+  margin-top:48px; position:relative;
+  padding:12px 36px; border:1px solid var(--fg2); border-radius:4px;
+  color:var(--fg); font-size:12px; letter-spacing:3px; text-decoration:none;
+  transition:all .4s; cursor:pointer; background:transparent;
+}
+.hero .cta:hover { border-color:var(--fg); background:var(--fg); color:var(--bg); }
+
+/* ─── Sections ─── */
+section { padding:80px 40px; border-top:1px solid var(--line); }
+section:first-of-type { border:none; }
+.section-title {
+  font-size:11px; letter-spacing:4px; color:var(--fg2); margin-bottom:40px; font-weight:400;
+}
+.modules { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); }
+.mod {
+  background:var(--bg2); padding:40px 32px; cursor:pointer;
+  transition:background .4s; position:relative; overflow:hidden;
+}
+.mod:hover { background:var(--bg3); }
+.mod h3 { font-size:13px; font-weight:500; letter-spacing:2px; color:var(--fg); margin-bottom:8px; }
+.mod p { font-size:12px; color:var(--fg2); font-weight:300; line-height:1.6; }
+.mod .nr { font-size:32px; font-weight:100; color:var(--fg3); position:absolute; bottom:12px; right:16px; }
+
+/* ─── 动态列表 ─── */
+.activity { max-width:600px; }
+.activity .item {
+  display:flex; align-items:center; gap:16px;
+  padding:16px 0; border-bottom:1px solid var(--line);
+  cursor:pointer; transition:opacity .2s;
+}
+.activity .item:last-child { border:none; }
+.activity .item:hover { opacity:.7; }
+.activity .item .tag {
+  font-size:10px; letter-spacing:1px; padding:2px 8px;
+  border:1px solid var(--fg3); color:var(--fg2); border-radius:2px; flex-shrink:0;
+}
+.activity .item .txt { font-size:13px; color:var(--fg); font-weight:300; flex:1; }
+.activity .item .tm { font-size:11px; color:var(--fg3); flex-shrink:0; }
+
+/* ─── 页面切换动画 ─── */
+.page {
+  opacity:0; transform:translateY(20px);
+  transition:opacity .6s, transform .6s;
+}
+.page.active {
+  opacity:1; transform:translateY(0);
+}
+
+@media (max-width:768px) {
+  .modules { grid-template-columns:repeat(2,1fr); }
+  header { padding:0 20px; }
+  section { padding:40px 20px; }
+  header nav a { font-size:11px; padding:6px 10px; }
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="logo">南海山</div>
+  <div class="bar"></div>
+  <div class="hint">NAN HAI SHAN</div>
+</div>
+
+<div id="app">
+  <header>
+    <h1>南海<em>山</em></h1>
+    <nav>
+      <a class="active" data-page="home">首页</a>
+      <a data-page="video">视频</a>
+      <a data-page="ai">AI</a>
+      <a data-page="community">社区</a>
+    </nav>
+  </header>
+
+  <!-- 首页 -->
+  <div class="page active" data-page="home">
+    <div class="hero">
+      <h2>南海山</h2>
+      <p>聚合 · 连接 · 创造</p>
+      <button class="cta">进入</button>
+    </div>
+
+    <section>
+      <h3 class="section-title">模块</h3>
+      <div class="modules">
+        <div class="mod">
+          <h3>视频</h3>
+          <p>搜索B站内容，直接播放。无需跳转。</p>
+          <span class="nr">01</span>
+        </div>
+        <div class="mod">
+          <h3>AI 助手</h3>
+          <p>自带Key接入多模型。Claude · DeepSeek · Gemini</p>
+          <span class="nr">02</span>
+        </div>
+        <div class="mod">
+          <h3>知识库</h3>
+          <p>对接 Obsidian 笔记。搜索、查看、编辑。</p>
+          <span class="nr">03</span>
+        </div>
+        <div class="mod">
+          <h3>社区</h3>
+          <p>留言 · 讨论 · 分享。即将开放。</p>
+          <span class="nr">04</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3 class="section-title">动态</h3>
+      <div class="activity">
+        <div class="item"><span class="tag">AI</span><span class="txt">DeepSeek 免费 API 额度已更新</span><span class="tm">今天</span></div>
+        <div class="item"><span class="tag">视频</span><span class="txt">B站搜索功能内测中</span><span class="tm">昨天</span></div>
+        <div class="item"><span class="tag">社区</span><span class="txt">用户注册系统开发中</span><span class="tm">3天前</span></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 视频页面（占位） -->
+  <div class="page" data-page="video" style="padding:120px 40px 80px;min-height:100vh;">
+    <h3 style="font-weight:300;letter-spacing:4px;font-size:13px;color:#666;">视频</h3>
+    <p style="margin-top:12px;color:#444;font-size:13px;">搜索B站内容，点击即播。</p>
+  </div>
+
+  <!-- AI 页面（占位） -->
+  <div class="page" data-page="ai" style="padding:120px 40px 80px;min-height:100vh;">
+    <h3 style="font-weight:300;letter-spacing:4px;font-size:13px;color:#666;">AI 助手</h3>
+    <p style="margin-top:12px;color:#444;font-size:13px;">配置 API Key 后即可使用。</p>
+  </div>
+
+  <!-- 社区页面（占位） -->
+  <div class="page" data-page="community" style="padding:120px 40px 80px;min-height:100vh;">
+    <h3 style="font-weight:300;letter-spacing:4px;font-size:13px;color:#666;">社区</h3>
+    <p style="margin-top:12px;color:#444;font-size:13px;">即将开放，敬请期待。</p>
+  </div>
+
+</div>
+
+<script>
+// Loading 动画
+setTimeout(() => {
+  document.getElementById('loading').classList.add('done');
+  document.getElementById('app').classList.add('show');
+}, 2200);
+
+// 页面切换动画
+document.querySelectorAll('header nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelectorAll('header nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.page[data-page="${a.dataset.page}"]`).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南海山 · 设计预览</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; background:#f5f5f5; padding:20px; }
+.toolbar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+.toolbar button {
+  padding:10px 20px; border:2px solid #ddd; border-radius:8px;
+  background:#fff; cursor:pointer; font-size:14px; font-weight:600;
+  transition:all .2s;
+}
+.toolbar button.active { border-color:var(--accent); background:var(--accent-light, #eef); }
+
+/* 深色模式切换 */
+.mode-toggle { margin-left:auto; display:flex; gap:6px; align-items:center; }
+.mode-toggle button { padding:6px 14px; font-size:12px; }
+
+/* 预览框架 */
+.preview {
+  border-radius:12px; overflow:hidden; box-shadow:0 4px 30px rgba(0,0,0,.1);
+  min-height:500px; transition:all .3s;
+}
+
+/* ─── 深海 · 藏青+橙 ─── */
+.theme-ocean {
+  --bg: #f0f4f8; --card: #fff; --fg: #1a2332; --fg2: #5a6a7a;
+  --accent: #e87a3a; --accent-light: #fdf0e6; --border: #dce4ec;
+  --header-bg: #1a2332; --header-fg: #fff;
+  --nav-active: #e87a3a; --shadow: 0 2px 12px rgba(26,35,50,.08);
+}
+.theme-ocean.dark {
+  --bg: #111827; --card: #1a2332; --fg: #e8edf4; --fg2: #8a9aaa;
+  --border: #2a3342; --header-bg: #0d1420;
+  --shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+/* ─── 极简 · 白+绿 ─── */
+.theme-clean {
+  --bg: #f8faf8; --card: #fff; --fg: #1a1a1a; --fg2: #6a7a6a;
+  --accent: #3a8a5a; --accent-light: #eaf5ee; --border: #e0e8e0;
+  --header-bg: #fff; --header-fg: #1a1a1a;
+  --nav-active: #3a8a5a; --shadow: 0 1px 8px rgba(58,138,90,.1);
+}
+.theme-clean.dark {
+  --bg: #1a1a1a; --card: #2a2a2a; --fg: #e8e8e8; --fg2: #8a9a8a;
+  --border: #3a3a3a; --header-bg: #222;
+  --shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+/* ─── 暗夜 · 深灰+霓虹 ─── */
+.theme-night {
+  --bg: #0d0d14; --card: #1a1a26; --fg: #e0e0f0; --fg2: #7a7a9a;
+  --accent: #7c5cff; --accent-light: #2a2040; --border: #2a2a3a;
+  --header-bg: #0d0d14; --header-fg: #e0e0f0;
+  --nav-active: #7c5cff; --shadow: 0 2px 12px rgba(124,92,255,.15);
+}
+
+/* ─── 暖调 · 米白+陶土红 ─── */
+.theme-warm {
+  --bg: #faf6f0; --card: #fff; --fg: #2a1f14; --fg2: #7a6a5a;
+  --accent: #c0653a; --accent-light: #f8efe8; --border: #e8e0d8;
+  --header-bg: #2a1f14; --header-fg: #faf6f0;
+  --nav-active: #c0653a; --shadow: 0 2px 12px rgba(192,101,58,.1);
+}
+.theme-warm.dark {
+  --bg: #1f1410; --card: #2a1f14; --fg: #e8ddd0; --fg2: #8a7a6a;
+  --border: #3a2f24; --header-bg: #1a100c;
+  --shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+/* ─── 预览内容 ─── */
+.preview { background:var(--bg); color:var(--fg); font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; }
+.header {
+  background:var(--header-bg); color:var(--header-fg);
+  padding:16px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+.header h1 { font-size:20px; font-weight:700; }
+.header h1 span { color:var(--accent); }
+.header nav { display:flex; gap:16px; }
+.header nav a {
+  color:var(--header-fg); opacity:.7; text-decoration:none;
+  font-size:13px; font-weight:500; transition:opacity .2s;
+  cursor:pointer;
+}
+.header nav a:hover, .header nav a.active { opacity:1; color:var(--nav-active); }
+
+.dashboard { padding:24px; }
+.dashboard h2 { font-size:18px; font-weight:700; margin-bottom:16px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
+.card {
+  background:var(--card); border-radius:10px; padding:20px;
+  box-shadow:var(--shadow); border:1px solid var(--border);
+}
+.card .icon { font-size:28px; margin-bottom:8px; display:block; }
+.card h3 { font-size:15px; font-weight:600; margin-bottom:4px; }
+.card p { font-size:13px; color:var(--fg2); line-height:1.5; }
+.card-tags { display:flex; gap:4px; margin-top:10px; flex-wrap:wrap; }
+.card-tags span {
+  font-size:11px; padding:2px 8px; border-radius:4px;
+  background:var(--accent-light); color:var(--accent);
+}
+
+.msg-preview { margin-top:20px; }
+.msg-item {
+  background:var(--card); border-radius:8px; padding:12px 16px;
+  margin-bottom:8px; box-shadow:var(--shadow); border:1px solid var(--border);
+  font-size:13px;
+}
+.msg-item .name { font-weight:600; color:var(--accent); font-size:12px; }
+.msg-item .time { float:right; color:var(--fg2); font-size:11px; }
+.msg-item .text { margin-top:4px; }
+
+.desc { padding:12px 24px 0; font-size:13px; color:var(--fg2); line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="active" data-theme="ocean" onclick="switchTheme('ocean')">🌊 深海 · 藏青+橙</button>
+  <button data-theme="clean" onclick="switchTheme('clean')">🌿 极简 · 白+绿</button>
+  <button data-theme="night" onclick="switchTheme('night')">🌙 暗夜 · 深灰+霓虹</button>
+  <button data-theme="warm" onclick="switchTheme('warm')">☀️ 暖调 · 米白+陶土红</button>
+  <div class="mode-toggle">
+    <button onclick="toggleDark()">🌓 深色/浅色</button>
+  </div>
+</div>
+
+<div class="preview theme-ocean" id="preview">
+  <div class="header">
+    <h1>南海<span>山</span></h1>
+    <nav>
+      <a class="active">首页</a>
+      <a>视频</a>
+      <a>AI</a>
+      <a>社区</a>
+    </nav>
+  </div>
+
+  <div class="dashboard">
+    <div class="grid">
+      <div class="card">
+        <span class="icon">📺</span>
+        <h3>视频</h3>
+        <p>搜索B站视频，直接播放</p>
+        <div class="card-tags"><span>输入关键词</span><span>一键播放</span></div>
+      </div>
+      <div class="card">
+        <span class="icon">🤖</span>
+        <h3>AI 助手</h3>
+        <p>接入 Claude / DeepSeek / Gemini</p>
+        <div class="card-tags"><span>自备Key</span><span>多模型</span></div>
+      </div>
+      <div class="card">
+        <span class="icon">📝</span>
+        <h3>知识库</h3>
+        <p>对接 Obsidian，搜/看/编</p>
+        <div class="card-tags"><span>即将开放</span></div>
+      </div>
+      <div class="card">
+        <span class="icon">💬</span>
+        <h3>社区</h3>
+        <p>留言讨论，分享交流</p>
+        <div class="card-tags"><span>12条新消息</span></div>
+      </div>
+    </div>
+
+    <div class="msg-preview">
+      <h2>最新动态</h2>
+      <div class="msg-item">
+        <span class="name">小明</span><span class="time">2分钟前</span>
+        <div class="text">南海山这个AI助手太强了，直接帮我写了个脚本</div>
+      </div>
+      <div class="msg-item">
+        <span class="name">阿花</span><span class="time">15分钟前</span>
+        <div class="text">有人一起看B站这个新番吗？</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="desc">💡 点击上方配色方案切换，点击🌓切换深色/浅色模式。</p>
+
+<script>
+function switchTheme(t) {
+  const p = document.getElementById('preview');
+  p.className = 'preview theme-' + t + (p.classList.contains('dark') ? ' dark' : '');
+  document.querySelectorAll('.toolbar button').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-theme="${t}"]`).classList.add('active');
+}
+function toggleDark() {
+  const p = document.getElementById('preview');
+  p.classList.toggle('dark');
+}
+</script>
+</body>
+</html>

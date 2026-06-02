@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南海山 · 设计探索</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; background:#f5f5f5; padding:20px; }
+
+.toolbar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+.toolbar button {
+  padding:8px 18px; border:2px solid #ddd; border-radius:8px;
+  background:#fff; cursor:pointer; font-size:13px; font-weight:500;
+  transition:all .2s;
+}
+.toolbar button.active { border-color:#111; background:#111; color:#fff; }
+
+/* ─── Preview 容器 ─── */
+.preview {
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.06);
+  min-height:500px; transition:all .3s;
+  position:relative;
+}
+
+/* ─── Style A：轻盈 · 白+灰+一色点缀 ─── */
+.style-a {
+  --bg: #ffffff; --bg-sub: #f8f8f8;
+  --fg: #1a1a1a; --fg2: #888; --fg3: #bbb;
+  --accent: #2563eb; --accent-soft: #eef4ff;
+  --line: #eee; --shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.style-a .hd {
+  background:var(--bg); border-bottom:1px solid var(--line);
+  padding:0 32px; height:56px; display:flex; align-items:center; justify-content:space-between;
+}
+.style-a .hd h1 { font-size:15px; font-weight:600; letter-spacing:-.3px; }
+.style-a .hd h1 em { font-style:normal; color:var(--accent); }
+.style-a .hd nav { display:flex; gap:4px; }
+.style-a .hd nav a {
+  padding:6px 14px; border-radius:6px; font-size:13px;
+  color:var(--fg2); text-decoration:none; transition:all .15s; cursor:pointer;
+}
+.style-a .hd nav a:hover { color:var(--fg); background:var(--bg-sub); }
+.style-a .hd nav a.active { color:#fff; background:var(--accent); font-weight:500; }
+
+.style-a .main { padding:40px 32px 60px; background:var(--bg); }
+.style-a .greeting { font-size:22px; font-weight:600; margin-bottom:24px; letter-spacing:-.5px; }
+.style-a .greeting small { font-size:14px; font-weight:400; color:var(--fg2); display:block; margin-top:4px; }
+
+.style-a .modules { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+.style-a .mod {
+  background:var(--bg-sub); border-radius:10px; padding:20px;
+  cursor:pointer; transition:all .2s; border:1px solid transparent;
+}
+.style-a .mod:hover { background:var(--accent-soft); border-color:var(--accent); }
+.style-a .mod .ico { font-size:20px; margin-bottom:6px; display:block; }
+.style-a .mod h3 { font-size:13px; font-weight:600; margin-bottom:2px; }
+.style-a .mod p { font-size:12px; color:var(--fg2); }
+
+.style-a .section-title { font-size:13px; font-weight:600; color:var(--fg2); margin-bottom:12px; }
+.style-a .feed { display:flex; flex-direction:column; gap:8px; }
+.style-a .item {
+  padding:12px 0; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:12px;
+}
+.style-a .item:last-child { border:none; }
+.style-a .item .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+.style-a .item .name { font-size:13px; font-weight:500; }
+.style-a .item .text { font-size:13px; color:var(--fg2); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.style-a .item .time { font-size:11px; color:var(--fg3); flex-shrink:0; }
+
+/* ─── Style B：温暖 · 米底+深棕点缀 ─── */
+.style-b {
+  --bg: #fdfaf7; --bg-sub: #f8f3ee;
+  --fg: #2a2218; --fg2: #8a7a6a; --fg3: #c0b0a0;
+  --accent: #b8653a; --accent-soft: #f5ede6;
+  --line: #ede5dd; --shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.style-b .hd {
+  background:var(--bg); border-bottom:1px solid var(--line);
+  padding:0 32px; height:56px; display:flex; align-items:center; justify-content:space-between;
+}
+.style-b .hd h1 { font-size:15px; font-weight:600; letter-spacing:-.3px; }
+.style-b .hd h1 em { font-style:normal; color:var(--accent); }
+.style-b .hd nav { display:flex; gap:4px; }
+.style-b .hd nav a {
+  padding:6px 14px; border-radius:6px; font-size:13px;
+  color:var(--fg2); text-decoration:none; transition:all .15s; cursor:pointer;
+}
+.style-b .hd nav a:hover { color:var(--fg); background:var(--bg-sub); }
+.style-b .hd nav a.active { color:#fff; background:var(--accent); font-weight:500; }
+
+.style-b .main { padding:40px 32px 60px; background:var(--bg); }
+.style-b .greeting { font-size:22px; font-weight:600; margin-bottom:24px; letter-spacing:-.5px; }
+.style-b .greeting small { font-size:14px; font-weight:400; color:var(--fg2); display:block; margin-top:4px; }
+.style-b .modules { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+.style-b .mod {
+  background:var(--bg-sub); border-radius:10px; padding:20px;
+  cursor:pointer; transition:all .2s; border:1px solid transparent;
+}
+.style-b .mod:hover { background:var(--accent-soft); border-color:var(--accent); }
+.style-b .mod .ico { font-size:20px; margin-bottom:6px; display:block; }
+.style-b .mod h3 { font-size:13px; font-weight:600; margin-bottom:2px; }
+.style-b .mod p { font-size:12px; color:var(--fg2); }
+.style-b .section-title { font-size:13px; font-weight:600; color:var(--fg2); margin-bottom:12px; }
+.style-b .feed { display:flex; flex-direction:column; gap:8px; }
+.style-b .item { padding:12px 0; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px; }
+.style-b .item:last-child { border:none; }
+.style-b .item .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+.style-b .item .name { font-size:13px; font-weight:500; }
+.style-b .item .text { font-size:13px; color:var(--fg2); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.style-b .item .time { font-size:11px; color:var(--fg3); flex-shrink:0; }
+
+.desc { padding:12px 4px 0; font-size:13px; color:#888; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span style="font-size:13px;font-weight:600;margin-right:8px;">选择风格：</span>
+  <button class="active" data-style="a" onclick="switchStyle('a')">○ 轻盈 · 蓝白</button>
+  <button data-style="b" onclick="switchStyle('b')">○ 温暖 · 米棕</button>
+</div>
+
+<div class="preview style-a" id="preview">
+
+  <div class="hd">
+    <h1>南海<em>山</em></h1>
+    <nav>
+      <a class="active">首页</a>
+      <a>视频</a>
+      <a>AI</a>
+      <a>社区</a>
+    </nav>
+  </div>
+
+  <div class="main">
+    <div class="greeting">
+      下午好
+      <small>今天有 3 条新动态</small>
+    </div>
+
+    <div class="modules">
+      <div class="mod">
+        <span class="ico">📺</span>
+        <h3>视频</h3>
+        <p>搜B站直接看</p>
+      </div>
+      <div class="mod">
+        <span class="ico">🤖</span>
+        <h3>AI 助手</h3>
+        <p>自备Key多模型</p>
+      </div>
+      <div class="mod">
+        <span class="ico">📚</span>
+        <h3>知识库</h3>
+        <p>Obsidian 对接</p>
+      </div>
+      <div class="mod">
+        <span class="ico">💬</span>
+        <h3>社区</h3>
+        <p>留言讨论</p>
+      </div>
+    </div>
+
+    <div class="section-title">最新动态</div>
+    <div class="feed">
+      <div class="item">
+        <span class="dot"></span>
+        <span class="name">小明</span>
+        <span class="text">AI助手写了个脚本，太强了</span>
+        <span class="time">刚刚</span>
+      </div>
+      <div class="item">
+        <span class="dot"></span>
+        <span class="name">阿花</span>
+        <span class="text">有人一起看B站新番吗？</span>
+        <span class="time">15分钟前</span>
+      </div>
+      <div class="item">
+        <span class="dot"></span>
+        <span class="name">老张</span>
+        <span class="text">知识库功能什么时候开放啊</span>
+        <span class="time">1小时前</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="desc">两种风格，点按钮切换。轻盈蓝白 = 清爽专业，温暖米棕 = 柔和舒适。</p>
+
+<script>
+function switchStyle(s) {
+  const p = document.getElementById('preview');
+  p.className = 'preview style-' + s;
+  document.querySelectorAll('.toolbar button').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-style="${s}"]`).classList.add('active');
+}
+</script>
+</body>
+</html>

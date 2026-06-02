@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南海山 · 模块设计</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+  background:#f8f8f8; overflow-x:hidden;
+  user-select:none;
+}
+
+/* ─── 顶部 ─── */
+.header {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:0 32px; height:56px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(255,255,255,.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.header h1 { font-size:15px; font-weight:600; letter-spacing:-.3px; }
+.header h1 em { font-style:normal; color:#2563eb; }
+.header nav { display:flex; gap:2px; }
+.header nav a {
+  padding:8px 14px; font-size:13px; color:#666; text-decoration:none;
+  border-radius:6px; transition:all .15s; cursor:pointer;
+}
+.header nav a:hover { background:#f0f0f0; color:#111; }
+.header nav a.active { background:#111; color:#fff; }
+
+/* ─── 画布 ─── */
+.canvas {
+  position:fixed; top:56px; left:0; right:0; bottom:0;
+  background: #f8f8f8;
+  background-image:
+    radial-gradient(circle, rgba(0,0,0,.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── 模块 ─── */
+.module {
+  position:absolute; border-radius:12px;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(0,0,0,.06);
+  box-shadow:0 2px 20px rgba(0,0,0,.04);
+  cursor:grab; transition:box-shadow .2s;
+  min-width:200px; min-height:100px;
+  overflow:hidden;
+}
+.module:hover { box-shadow:0 4px 32px rgba(0,0,0,.08); }
+.module:active { cursor:grabbing; box-shadow:0 8px 48px rgba(0,0,0,.12); z-index:10; }
+
+.module .bar {
+  padding:14px 16px 8px; display:flex; align-items:center; justify-content:space-between;
+  cursor:grab; font-size:11px; font-weight:600; color:#888; letter-spacing:1px;
+  text-transform:uppercase;
+}
+.module .bar .close {
+  width:20px; height:20px; border-radius:4px; border:none;
+  background:transparent; color:#ccc; cursor:pointer; font-size:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.module .bar .close:hover { background:#fee; color:#e33; }
+
+.module .body { padding:0 16px 16px; }
+.module .body h2 { font-size:15px; font-weight:600; margin-bottom:4px; }
+.module .body p { font-size:13px; color:#888; line-height:1.5; }
+
+/* 调整大小的手柄 */
+.resize-handle {
+  position:absolute; bottom:0; right:0; width:16px; height:16px;
+  cursor:nwse-resize; opacity:0; transition:opacity .2s;
+}
+.module:hover .resize-handle { opacity:1; }
+.resize-handle::after {
+  content:''; position:absolute; bottom:3px; right:3px;
+  width:6px; height:6px; border-right:2px solid #999; border-bottom:2px solid #999;
+}
+
+/* ─── 模块内容示例 ─── */
+.search-box {
+  display:flex; gap:8px; margin-bottom:8px;
+}
+.search-box input {
+  flex:1; padding:8px 12px; border:1px solid #eee; border-radius:6px;
+  font-size:13px; outline:none; background:#f8f8f8;
+}
+.search-box input:focus { border-color:#2563eb; }
+
+.video-item {
+  display:flex; gap:10px; padding:8px 0; border-bottom:1px solid #f0f0f0;
+  cursor:pointer; transition:opacity .15s;
+}
+.video-item:hover { opacity:.7; }
+.video-item:last-child { border:none; }
+.video-item .thumb {
+  width:60px; height:40px; border-radius:4px; background:#eee;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+}
+.video-item .info .t { font-size:12px; font-weight:500; }
+.video-item .info .s { font-size:11px; color:#999; margin-top:2px; }
+
+.chat-msg { font-size:13px; color:#555; margin-bottom:6px; line-height:1.5; }
+.chat-input {
+  display:flex; gap:6px; margin-top:8px;
+}
+.chat-input input {
+  flex:1; padding:6px 10px; border:1px solid #eee; border-radius:6px;
+  font-size:12px; outline:none;
+}
+
+/* ─── 吸附指示器 ─── */
+.snap-guide {
+  position:absolute; background:#2563eb; opacity:0;
+  transition:opacity .15s; pointer-events:none;
+}
+.snap-guide.show { opacity:.4; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>南海<em>山</em></h1>
+  <nav>
+    <a class="active">工作台</a>
+    <a>探索</a>
+  </nav>
+</div>
+
+<div class="canvas" id="canvas">
+
+  <!-- 视频模块 -->
+  <div class="module" id="mod-video" style="left:40px;top:80px;width:320px;">
+    <div class="bar"><span>📺 视频</span><button class="close" onclick="this.closest('.module').remove()">×</button></div>
+    <div class="body">
+      <div class="search-box">
+        <input placeholder="搜索B站…">
+      </div>
+      <div class="video-item">
+        <div class="thumb">▶</div>
+        <div class="info"><div class="t">【4K】明日方舟终末地实机演示</div><div class="s">鹰角网络 · 12万播放</div></div>
+      </div>
+      <div class="video-item">
+        <div class="thumb">▶</div>
+        <div class="info"><div class="t">OpenAI GPT-5 发布会完整版</div><div class="s">AI科技 · 8万播放</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 助手模块 -->
+  <div class="module" id="mod-ai" style="left:400px;top:80px;width:300px;">
+    <div class="bar"><span>🤖 AI 助手</span><button class="close" onclick="this.closest('.module').remove()">×</button></div>
+    <div class="body">
+      <div class="chat-msg" style="color:#2563eb;font-weight:500;">你好，有什么可以帮你的？</div>
+      <div class="chat-msg">可以搜索、写作、翻译、编程……</div>
+      <div class="chat-input">
+        <input placeholder="输入消息…">
+      </div>
+    </div>
+  </div>
+
+  <!-- 社区模块 -->
+  <div class="module" id="mod-community" style="left:40px;top:360px;width:280px;">
+    <div class="bar"><span>💬 社区</span><button class="close" onclick="this.closest('.module').remove()">×</button></div>
+    <div class="body">
+      <div class="chat-msg" style="font-weight:500;">📌 欢迎来到南海山</div>
+      <div class="chat-msg">👤 小明：AI助手太好用了</div>
+      <div class="chat-msg">👤 阿花：有人一起看番吗</div>
+    </div>
+  </div>
+
+  <!-- 知识库模块 -->
+  <div class="module" id="mod-knowledge" style="left:400px;top:360px;width:280px;">
+    <div class="bar"><span>📚 知识库</span><button class="close" onclick="this.closest('.module').remove()">×</button></div>
+    <div class="body">
+      <p style="margin-bottom:6px;">对接 Obsidian 笔记</p>
+      <div class="search-box">
+        <input placeholder="搜索笔记…">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── 拖拽 + 磁吸 ───
+const modules = document.querySelectorAll('.module');
+let dragEl = null, offsetX, offsetY, origX, origY;
+let isDragging = false;
+
+modules.forEach(m => {
+  m.addEventListener('mousedown', e => {
+    if (e.target.closest('.close') || e.target.closest('input')) return;
+    dragEl = m;
+    const rect = m.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    origX = rect.left;
+    origY = rect.top;
+    isDragging = false;
+  });
+});
+
+document.addEventListener('mousemove', e => {
+  if (!dragEl) return;
+  if (!isDragging) {
+    const dx = e.clientX - offsetX - origX;
+    const dy = e.clientY - offsetY - origY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) isDragging = true;
+    if (!isDragging) return;
+  }
+
+  let x = e.clientX - offsetX;
+  let y = e.clientY - offsetY;
+
+  // 磁吸检测：只吸附到同类模块
+  let snapX = null, snapY = null;
+  const threshold = 12;
+  const r = dragEl.getBoundingClientRect();
+
+  modules.forEach(other => {
+    if (other === dragEl) return;
+    const o = other.getBoundingClientRect();
+
+    // 水平磁吸（左边缘/右边缘对齐）
+    if (Math.abs(r.top - o.top) < 20 && Math.abs(r.height - o.height) < 20) {
+      if (Math.abs(x - o.left) < threshold) snapX = o.left;
+      if (Math.abs(x + r.width - (o.left + o.width)) < threshold) snapX = o.left + o.width - r.width;
+    }
+    if (Math.abs(r.bottom - o.bottom) < 20 && Math.abs(r.height - o.height) < 20) {
+      if (Math.abs(x - o.left) < threshold) snapX = o.left;
+      if (Math.abs(x + r.width - (o.left + o.width)) < threshold) snapX = o.left + o.width - r.width;
+    }
+
+    // 垂直磁吸（上边缘对齐）
+    if (Math.abs(r.left - o.left) < 15 && Math.abs(r.width - o.width) < 15) {
+      if (Math.abs(y - o.top) < threshold) snapY = o.top;
+      if (Math.abs(y + r.height - (o.top + o.height)) < threshold) snapY = o.top + o.height - r.height;
+    }
+    if (Math.abs(r.right - o.right) < 15 && Math.abs(r.width - o.width) < 15) {
+      if (Math.abs(y - o.top) < threshold) snapY = o.top;
+      if (Math.abs(y + r.height - (o.top + o.height)) < threshold) snapY = o.top + o.height - r.height;
+    }
+  });
+
+  if (snapX !== null) x = snapX;
+  if (snapY !== null) y = snapY;
+
+  dragEl.style.left = x + 'px';
+  dragEl.style.top = y + 'px';
+});
+
+document.addEventListener('mouseup', () => {
+  dragEl = null;
+  isDragging = false;
+});
+
+// ─── 调整大小 ───
+modules.forEach(m => {
+  const handle = document.createElement('div');
+  handle.className = 'resize-handle';
+  m.appendChild(handle);
+
+  handle.addEventListener('mousedown', e => {
+    e.stopPropagation();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startW = m.offsetWidth;
+    const startH = m.offsetHeight;
+
+    const onMove = ev => {
+      m.style.width = Math.max(200, startW + (ev.clientX - startX)) + 'px';
+      m.style.height = Math.max(100, startH + (ev.clientY - startY)) + 'px';
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+});
+</script>
+</body>
+</html>

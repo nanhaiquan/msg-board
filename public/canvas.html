@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>画板</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; font-family: -apple-system, "Segoe UI", sans-serif; }
+.toolbar {
+  display:flex; align-items:center; gap:8px; padding:8px 16px;
+  background:#1a1a1a; border-bottom:1px solid #2a2a2a;
+}
+.toolbar button {
+  padding:6px 12px; border:1px solid #333; border-radius:4px;
+  background:transparent; color:#aaa; font-size:12px; cursor:pointer;
+  transition:all .2s;
+}
+.toolbar button:hover { background:#2a2a2a; color:#fff; }
+.toolbar .sep { width:1px; height:20px; background:#2a2a2a; margin:0 4px; }
+canvas { display:block; cursor:crosshair; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="setTool('pen')">✏️ 画笔</button>
+  <button onclick="setTool('arrow')">→ 箭头</button>
+  <button onclick="setTool('rect')">□ 方框</button>
+  <button onclick="setTool('text')">T 文字</button>
+  <div class="sep"></div>
+  <button onclick="undo()">↩ 撤销</button>
+  <button onclick="clearAll()">🗑 清空</button>
+  <div class="sep"></div>
+  <button onclick="setColor('#ffffff')" style="background:#fff;width:20px;height:20px;padding:0;border-radius:50%;"></button>
+  <button onclick="setColor('#ff6b6b')" style="background:#ff6b6b;width:20px;height:20px;padding:0;border-radius:50%;"></button>
+  <button onclick="setColor('#4ecdc4')" style="background:#4ecdc4;width:20px;height:20px;padding:0;border-radius:50%;"></button>
+  <button onclick="setColor('#ffe66d')" style="background:#ffe66d;width:20px;height:20px;padding:0;border-radius:50%;"></button>
+</div>
+
+<canvas id="c"></canvas>
+
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+let tool = 'pen', color = '#ffffff', drawing = false;
+let startX, startY;
+let elements = [], history = [];
+const w = () => { c.width = window.innerWidth; c.height = window.innerHeight - 40; };
+window.onresize = w; w();
+render();
+
+function setTool(t) { tool = t; }
+function setColor(clr) { color = clr; }
+
+c.onmousedown = e => {
+  startX = e.clientX; startY = e.clientY - 40;
+  if (tool === 'text') {
+    const t = prompt('输入文字:');
+    if (!t) return;
+    elements.push({ type: 'text', x: startX, y: startY, text: t, color });
+    history = []; render(); return;
+  }
+  drawing = true;
+};
+
+c.onmousemove = e => {
+  if (!drawing) return;
+  const x = e.clientX, y = e.clientY - 40;
+  if (tool === 'pen') {
+    elements.push({ type:'pen', x, y, color, r:2 });
+    render();
+  } else {
+    render();
+    ctx.save();
+    ctx.strokeStyle = color; ctx.lineWidth = 2;
+    ctx.setLineDash([4,4]);
+    if (tool === 'rect') ctx.strokeRect(startX, startY, x-startX, y-startY);
+    else if (tool === 'arrow') {
+      ctx.beginPath(); ctx.moveTo(startX, startY);
+      ctx.lineTo(x, y); ctx.stroke();
+    }
+    ctx.restore();
+  }
+};
+
+c.onmouseup = e => {
+  if (!drawing) return;
+  drawing = false;
+  const x = e.clientX, y = e.clientY - 40;
+  history.push([]);
+  if (tool === 'rect') elements.push({ type:'rect', x:startX, y:startY, w:x-startX, h:y-startY, color });
+  else if (tool === 'arrow') elements.push({ type:'arrow', x1:startX, y1:startY, x2:x, y2:y, color });
+  render();
+};
+
+function undo() {
+  if (elements.length === 0) return;
+  history.push([...elements]);
+  elements.pop();
+  render();
+}
+
+function clearAll() { elements = []; history = []; render(); }
+
+function render() {
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle = '#111'; ctx.fillRect(0,0,c.width,c.height);
+  for (const el of elements) {
+    ctx.save();
+    ctx.strokeStyle = el.color; ctx.fillStyle = el.color; ctx.lineWidth = 2;
+    if (el.type === 'pen') {
+      ctx.fillRect(el.x, el.y, el.r, el.r);
+    } else if (el.type === 'rect') {
+      ctx.strokeRect(el.x, el.y, el.w, el.h);
+    } else if (el.type === 'arrow') {
+      ctx.beginPath(); ctx.moveTo(el.x1, el.y1);
+      ctx.lineTo(el.x2, el.y2); ctx.stroke();
+    } else if (el.type === 'text') {
+      ctx.font = '14px -apple-system, sans-serif';
+      ctx.fillText(el.text, el.x, el.y);
+    }
+    ctx.restore();
+  }
+}
+</script>
+</body>
+</html>
