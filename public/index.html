@@ -2,230 +2,82 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>南海山</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>南海山论坛</title>
 <style>
 *,*:before,*:after{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden}
-body{font-family:system-ui,-apple-system,"Segoe UI","Noto Sans SC",sans-serif;background:#0c0c0e;color:#ddd;transition:background .3s,color .3s}
-[data-theme=dark]{--bg:#0c0c0e;--b2:#131315;--b3:#1a1a1e;--fg:#ddd;--f2:#6b6b7a;--f3:#3b3b44;--ln:rgba(255,255,255,.05);--ac:#5c8cff;--ac2:#4ccc9a;--ac3:#cc6c4a}
-[data-theme=light]{--bg:#eeeef0;--b2:#fff;--b3:#e4e4e8;--fg:#1a1a1e;--f2:#6b6b7a;--f3:#b0b0ba;--ln:rgba(0,0,0,.06);--ac:#4a6cf7;--ac2:#2ab88e;--ac3:#e86a4a}
-[data-theme=sepia]{--bg:#eae2d4;--b2:#f5ede0;--b3:#ddd4c4;--fg:#3a3024;--f2:#7a6a54;--f3:#b0a090;--ln:rgba(0,0,0,.06);--ac:#b8653a;--ac2:#5a8a5a;--ac3:#8a6a4a}
-body{background:var(--bg);color:var(--fg)}
-.wrap{display:flex;height:100%;width:200%;transition:transform .5s cubic-bezier(.22,1,.36,1)}
-.wrap.s2{transform:translateX(-50%)}
-.z{width:50%;height:100%;overflow-y:auto;position:relative}
-.z::-webkit-scrollbar{width:0}
-
-/* 导航 */
-.nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:var(--b2);border-bottom:1px solid var(--ln)}
-.nav .t{font-size:13px;font-weight:600;letter-spacing:.3px;color:var(--fg)}
-.nav .t em{font-style:normal;color:var(--ac)}
-.nav .m{font-size:11px;color:var(--f2);cursor:pointer;padding:3px 10px;border-radius:4px;transition:background .15s;user-select:none}
-.nav .m:hover{background:var(--b3)}
-.nav .r{display:flex;gap:4px}
-.nav .r button{background:var(--b3);border:1px solid var(--ln);border-radius:4px;padding:3px 8px;color:var(--f2);font-size:10px;cursor:pointer;transition:all .15s}
-.nav .r button:hover{color:var(--fg);border-color:var(--ac)}
-
-/* ── 社区积木 ── */
-.sc{padding:16px 16px 80px;max-width:520px;margin:0 auto}
-.b{background:var(--b2);border:1px solid var(--ln);border-radius:6px;padding:10px;margin-bottom:14px}
-.b input,.b textarea{width:100%;border:none;background:none;outline:none;font:inherit;color:var(--fg);font-size:13px;resize:none}
-.b input{border-bottom:1px solid var(--ln);padding-bottom:6px;margin-bottom:6px}
-.b textarea{min-height:44px}
-.b ::placeholder{color:var(--f3)}
-.bar{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
-.bar .c{font-size:10px;color:var(--f3)}
-.bar button{padding:5px 16px;border:none;border-radius:5px;background:var(--ac);color:#fff;font-size:11px;cursor:pointer;font-weight:500}
+body{font-family:-apple-system,"Segoe UI","Noto Sans SC",sans-serif;background:#f5f5f7;color:#1a1a1e;padding:0 0 80px}
+.h{max-width:600px;margin:0 auto;padding:16px;border-bottom:1px solid #e8e8ec;display:flex;justify-content:space-between;align-items:center}
+.h h1{font-size:16px;font-weight:700}
+.h h1 em{font-style:normal;color:#4a6cf7}
+.h button{padding:4px 10px;border:1px solid #ddd;border-radius:5px;background:#fff;font-size:12px;cursor:pointer}
+.sc{max-width:600px;margin:0 auto;padding:16px}
+.ib{background:#fff;border:1px solid #e8e8ec;border-radius:8px;padding:12px;margin-bottom:16px}
+.ib input,.ib textarea{width:100%;border:none;outline:none;font:inherit;font-size:14px;resize:none;background:transparent}
+.ib input{border-bottom:1px solid #eee;padding-bottom:8px;margin-bottom:8px}
+.ib textarea{min-height:52px}
+.ib textarea::placeholder{color:#aaa}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.bar .c{font-size:12px;color:#aaa}
+.bar button{padding:6px 20px;border:none;border-radius:6px;background:#4a6cf7;color:#fff;font-size:13px;cursor:pointer;font-weight:500}
 .bar button:hover{opacity:.85}
 .fd{display:flex;flex-direction:column}
-.pt{padding:12px 0;border-bottom:1px solid var(--ln)}
+.pt{padding:14px 0;border-bottom:1px solid #eee}
 .pt:last-child{border:none}
-.pm{display:flex;gap:6px;align-items:center;margin-bottom:2px}
-.nn{font-size:11px;font-weight:500;color:var(--ac)}
-.tt{font-size:10px;color:var(--f3)}
-.ct{font-size:13px;line-height:1.6;color:var(--fg)}
-.pa{display:flex;gap:6px;margin-top:3px}
-.pa button{background:none;border:none;color:var(--f3);font-size:10px;cursor:pointer;padding:2px}
-.pa button:hover{color:var(--ac)}
-.rp{margin-top:4px;margin-left:14px;padding-left:8px;border-left:2px solid var(--ln)}
-.rp .i{font-size:11px;padding:4px 0}
-.ri{display:flex;gap:4px;margin-top:4px;margin-left:14px}
-.ri input{flex:1;padding:4px 8px;border:1px solid var(--ln);border-radius:4px;background:var(--b3);color:var(--fg);font-size:11px;outline:none}
-.ri input:focus{border-color:var(--ac)}
-.ri button{padding:3px 10px;border:none;border-radius:4px;background:var(--ac);color:#fff;font-size:10px;cursor:pointer}
-
-/* ── 工作台浮窗积木 ── */
-.wk{padding:16px;min-height:400px}
-.fw{position:fixed;background:var(--b2);border:1px solid var(--ln);border-radius:6px;z-index:100;box-shadow:0 4px 24px rgba(0,0,0,.12);overflow:hidden;min-width:70px}
-.fw.top{z-index:200}
-.fw.h{display:none!important}
-.fw .hd{display:flex;align-items:center;gap:6px;padding:5px 8px;cursor:grab;user-select:none}
-.fw .hd:active{cursor:grabbing}
-.fw .hd .d{width:3px;height:3px;border-radius:50%;flex-shrink:0}
-.fw .hd .l{font-size:10px;font-weight:600;letter-spacing:.2px;color:var(--fg)}
-.fw .hd .x{margin-left:auto;background:none;border:none;color:var(--f3);font-size:7px;cursor:pointer;padding:2px;line-height:1}
-.fw .hd .x:hover{color:var(--fg)}
-.fw .bd{display:none;padding:0 8px 8px;cursor:default}
-.fw.on .bd{display:block}
-.fw.on{min-width:280px}
-.fw.on .hd{border-bottom:1px solid var(--ln);padding-bottom:6px}
-
-/* AI */
-.ai-k{display:flex;gap:4px;margin-bottom:4px}
-.ai-k input{flex:1;padding:4px 6px;border:1px solid var(--ln);border-radius:3px;background:var(--b3);color:var(--fg);font-size:10px;outline:none}
-.ai-k select{padding:3px 4px;border:1px solid var(--ln);border-radius:3px;background:var(--b3);color:var(--fg);font-size:10px;outline:none}
-.ai-c{max-height:180px;overflow-y:auto;margin-bottom:4px;padding:4px 6px;background:var(--b3);border-radius:3px;font-size:11px;color:var(--f2);min-height:50px}
-.ai-i{display:flex;gap:4px}
-.ai-i input{flex:1;padding:4px 6px;border:1px solid var(--ln);border-radius:3px;background:var(--b3);color:var(--fg);font-size:11px;outline:none}
-.ai-i button{padding:3px 10px;border:none;border-radius:3px;background:var(--ac);color:#fff;font-size:10px;cursor:pointer}
-
-/* 视频 */
-.vl{display:flex;flex-direction:column;gap:3px;margin-top:4px}
-.vi{display:flex;gap:6px;padding:3px;border-radius:3px;cursor:pointer;transition:background .15s}
-.vi:hover{background:var(--b3)}
-.vi .vh{width:72px;height:40px;border-radius:3px;background:var(--b3);flex-shrink:0;overflow:hidden}
-.vi .vh img{width:100%;height:100%;object-fit:cover}
-.vi .vf{flex:1;min-width:0}
-.vi .vf .vt{font-size:10px;font-weight:500;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vi .vf .vs{font-size:9px;color:var(--f3)}
-.vp{margin-top:4px;border-radius:4px;overflow:hidden;background:#000;display:none}
-.vp iframe{width:100%;height:160px;border:none;display:block}
-
-.add{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border:1px solid var(--ln);border-radius:4px;background:var(--b2);color:var(--f2);font-size:10px;cursor:pointer;transition:all .15s}
-.add:hover{border-color:var(--ac);color:var(--fg)}
-
-.btm{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:3px;background:var(--b2);border:1px solid var(--ln);border-radius:16px;padding:2px;backdrop-filter:blur(8px)}
-.btm button{padding:4px 12px;border:none;border-radius:14px;background:transparent;color:var(--f2);font-size:10px;cursor:pointer}
-.btm button:active{background:var(--b3)}
-
-#ts{position:fixed;bottom:54px;left:50%;transform:translateX(-50%);z-index:300;background:var(--fg);color:var(--bg);padding:4px 10px;border-radius:4px;font-size:10px;opacity:0;transition:opacity .2s;pointer-events:none}
+.pm{display:flex;gap:8px;align-items:center;margin-bottom:3px}
+.nn{font-size:13px;font-weight:600;color:#4a6cf7}
+.tt{font-size:12px;color:#aaa}
+.ct{font-size:14px;line-height:1.7;color:#1a1a1e}
+.pa{display:flex;gap:10px;margin-top:5px}
+.pa button{background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;padding:2px}
+.pa button:hover{color:#4a6cf7}
+.rp{margin-top:6px;margin-left:18px;padding-left:10px;border-left:2px solid #e8e8ec}
+.rp .i{font-size:13px;padding:5px 0}
+.ri{display:flex;gap:6px;margin-top:6px;margin-left:18px}
+.ri input{flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:5px;font-size:13px;outline:none}
+.ri input:focus{border-color:#4a6cf7}
+.ri button{padding:4px 12px;border:none;border-radius:4px;background:#4a6cf7;color:#fff;font-size:12px;cursor:pointer}
+.em{text-align:center;color:#aaa;padding:60px 0;font-size:14px}
+#ts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1e;color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:99}
 #ts.on{opacity:1}
-
-@media(max-width:480px){
-  .sc{padding:12px}
-  .fw.on{min-width:240px}
-}
 </style>
 </head>
 <body>
-<div class="wrap" id="w">
-
-<!-- ── 分区A：社区 ── -->
-<div class="z">
-  <div class="nav">
-    <div class="t">南海<em>山</em></div>
-    <span class="m" onclick="P(2)">工作台 ▸</span>
-    <div class="r"><button onclick="ct()">换肤</button></div>
+<div class="h"><h1>南海<em>山</em> 论坛</h1><button onclick="ct()">换肤</button></div>
+<div class="sc">
+  <div class="ib">
+    <input id="n" placeholder="昵称" maxlength="20">
+    <textarea id="c" placeholder="说点什么…" maxlength="1000"></textarea>
+    <div class="bar"><span class="c"><span id="cc">0</span>/1000</span><button id="s">发布</button></div>
   </div>
-  <div class="sc">
-    <div class="b">
-      <input id="n" placeholder="昵称" maxlength="20">
-      <textarea id="c" placeholder="说点什么…" maxlength="1000"></textarea>
-      <div class="bar"><span class="c"><span id="cc">0</span>/1000</span><button id="s">发布</button></div>
-    </div>
-    <div class="fd" id="fd"><div style="text-align:center;color:var(--f3);padding:40px 0;font-size:12px">加载中</div></div>
-  </div>
+  <div class="fd" id="fd"><div class="em">加载中</div></div>
 </div>
-
-<!-- ── 分区B：工作台 ── -->
-<div class="z">
-  <div class="nav">
-    <div class="t">南海<em>山</em></div>
-    <span class="m" onclick="P(1)">▸ 社区</span>
-    <div class="r"><button onclick="ct()">换肤</button><span class="add" onclick="am()">+ 模块</span></div>
-  </div>
-  <div class="wk" id="wk">
-
-    <!-- 积木：视频 -->
-    <div class="fw on" id="b-v" style="left:16px;top:56px">
-      <div class="hd"><span class="d" style="background:var(--ac)"></span><span class="l">视频</span><button class="x" onclick="h('b-v')">✕</button></div>
-      <div class="bd">
-        <div><input id="vs" placeholder="搜索B站…" style="width:100%;padding:5px 8px;border:1px solid var(--ln);border-radius:3px;background:var(--b3);color:var(--fg);font-size:11px;outline:none" onkeydown="if(event.key=='Enter')sv()"></div>
-        <div class="vl" id="vl"><div style="text-align:center;padding:10px;color:var(--f3);font-size:10px">输入关键词搜索</div></div>
-        <div class="vp" id="vp"><iframe allowfullscreen></iframe></div>
-      </div>
-    </div>
-
-    <!-- 积木：AI -->
-    <div class="fw" id="b-a" style="left:320px;top:56px">
-      <div class="hd"><span class="d" style="background:var(--ac2)"></span><span class="l">AI</span><button class="x" onclick="h('b-a')">✕</button></div>
-      <div class="bd">
-        <div class="ai-k"><input id="ak" placeholder="API Key"><select id="am"><option value="deepseek-chat">DeepSeek</option><option value="claude-3-haiku">Claude</option><option value="gpt-4o-mini">GPT</option></select></div>
-        <div class="ai-c" id="ac">输入消息开始对话</div>
-        <div class="ai-i"><input id="ai" placeholder="消息…" onkeydown="if(event.key=='Enter')as()"><button onclick="as()">发送</button></div>
-      </div>
-    </div>
-
-    <!-- 积木：知识库 -->
-    <div class="fw" id="b-k" style="left:16px;top:200px">
-      <div class="hd"><span class="d" style="background:var(--ac3)"></span><span class="l">知识库</span><button class="x" onclick="h('b-k')">✕</button></div>
-      <div class="bd"><p style="color:var(--f3);font-size:11px">Obsidian对接 · 即将开放</p></div>
-    </div>
-
-  </div>
-</div>
-
-</div>
-
-<div class="btm"><button onclick="P(1)">◀ 社区</button><button onclick="P(2)">工作台 ▶</button></div>
 <div id="ts"></div>
-
 <script>
-const $=id=>document.getElementById(id),ts=m=>{const t=$('ts');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1500)};
+const $=id=>document.getElementById(id);
+const ts=m=>{const t=$('ts');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1800)};
 const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
-const ta=t=>{const d=new Date(t),s=(Date.now()-d)/1000;if(s<10)return'刚刚';if(s<60)return Math.floor(s)+'秒';if(s<3600)return Math.floor(s/60)+'分';if(s<86400)return Math.floor(s/3600)+'时';return Math.floor(s/86400)+'天'}
+const ta=t=>{const d=new Date(t),s=(Date.now()-d)/1000;if(s<10)return'刚刚';if(s<60)return Math.floor(s)+'秒前';if(s<3600)return Math.floor(s/60)+'分钟前';if(s<86400)return Math.floor(s/3600)+'小时前';return Math.floor(s/86400)+'天前'}
+const fmt=t=>{const d=new Date(t);return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`}
 
-// 页面切换
-function P(n){document.getElementById('w').className='wrap'+(n==2?' s2':'');document.querySelectorAll('.fw').forEach(f=>f.style.display=n==2?'block':'none')}
-// 浮窗隐藏/恢复
-function h(id){$(id).classList.add('h')}
-function am(){['b-v','b-a','b-k'].filter(id=>$(id).classList.contains('h')).forEach(id=>$(id).classList.remove('h'))}
-
-// 拖拽+置顶
-(function(){let d=null,ox=0,oy=0;
-document.addEventListener('mousedown',e=>{const h=e.target.closest('.hd');if(!h)return;d=h.closest('.fw');d.classList.add('top');const r=d.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top});
-document.addEventListener('mousemove',e=>{if(!d)return;d.style.left=(e.clientX-ox)+'px';d.style.top=(e.clientY-oy)+'px'});
-document.addEventListener('mouseup',()=>{d=null});
-document.addEventListener('mousedown',e=>{const w=e.target.closest('.fw');if(w){document.querySelectorAll('.fw').forEach(x=>x.classList.remove('top'));w.classList.add('top')}})})();
-
-// 折叠
-document.querySelectorAll('.hd').forEach(h=>{h.addEventListener('click',e=>{if(e.target.closest('.x'))return;h.closest('.fw').classList.toggle('on')})});
+// 回车发送
+$('c').addEventListener('keydown',e=>{if(e.key=='Enter'&&!e.shiftKey){e.preventDefault();sd()}});
 
 // 主题
-const TS=['dark','light','sepia'];let ti=0;
-const sv=localStorage.getItem('nhs-theme');
-if(sv&&TS.includes(sv)){ti=TS.indexOf(sv);document.documentElement.setAttribute('data-theme',sv)}
-function ct(){ti=(ti+1)%TS.length;document.documentElement.setAttribute('data-theme',TS[ti]);localStorage.setItem('nhs-theme',TS[ti])}
-
-// 视频
-async function sv(){const q=$('vs').value.trim();if(!q)return;$('b-v').classList.add('on');const el=$('vl');el.innerHTML='<div style="text-align:center;padding:10px;color:var(--f3);font-size:10px">搜索中</div>';
-try{const r=await fetch(`https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=${encodeURIComponent(q)}`);const d=await r.json();if(d.code!=0||!d.data?.result)return;rv(d.data.result.slice(0,6))}catch{try{const r=await fetch(`https://api.bilibili.com/x/web-interface/search/all/v2?keyword=${encodeURIComponent(q)}`);const d=await r.json();if(d.code==0)rv((d.data?.video||[]).slice(0,6))}catch{}}}
-function rv(v){const el=$('vl');if(!v.length){el.innerHTML='<div style="text-align:center;padding:10px;color:var(--f3);font-size:10px">无结果</div>';return}
-el.innerHTML=v.map(x=>{const p=x.pic||'',t=(x.title||'').replace(/<[^>]+>/g,'')||'',a=x.author||x.name||'',pl=x.play?(x.play/10000).toFixed(1)+'万':'';return`<div class="vi" onclick="pv(${x.aid||x.id})"><div class="vh"><img src="${p.startsWith('//')?'https:'+p:p}" loading="lazy"></div><div class="vf"><div class="vt">${esc(t)}</div><div class="vs">${esc(a)} ${pl}</div></div></div>`}).join('')}
-function pv(aid){$('b-v').classList.add('on');const p=$('vp');p.style.display='block';p.querySelector('iframe').src=`https://player.bilibili.com/player.html?bvid=${aid}&autoplay=1`}
-
-// AI
-async function as(){const k=$('ak').value.trim(),m=$('ai').value.trim(),mo=$('am').value;if(!m)return;if(!k){ts('需要API Key');return}
-const c=$('ac');c.innerHTML+=`<div style="color:var(--fg);margin-bottom:3px">你: ${esc(m)}</div>`;$('ai').value='';c.scrollTop=c.scrollHeight;
-c.innerHTML+=`<div style="color:var(--f3);margin-bottom:3px">…</div>`;
-try{const r=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:mo,messages:[{role:'user',content:m}],max_tokens:512})});
-if(!r.ok){c.innerHTML=c.innerHTML.replace('<div style="color:var(--f3);margin-bottom:3px">…</div>','')+`<div style="color:var(--ac3);margin-bottom:3px">错误 ${r.status}</div>`;return}
-const d=await r.json();const re=d.choices?.[0]?.message?.content||'';
-c.innerHTML=c.innerHTML.replace('<div style="color:var(--f3);margin-bottom:3px">…</div>','')+`<div style="color:var(--ac2);margin-bottom:3px">🤖 ${esc(re)}</div>`;c.scrollTop=c.scrollHeight
-}catch{c.innerHTML=c.innerHTML.replace('<div style="color:var(--f3);margin-bottom:3px">…</div>','')+`<div style="color:var(--ac3);margin-bottom:3px">网络错误</div>`}}
+let ti=0;
+function ct(){const ts=['#f5f5f7','#1a1a1e','#faf4e8'];const cs=['#1a1a1e','#eee','#3a3024'];document.body.style.background=ts[ti];document.body.style.color=cs[ti];ti=(ti+1)%ts.length}
 
 // 社区
 $('s').onclick=sd;$('c').oninput=()=>$('cc').textContent=$('c').value.length;ld();
 async function ld(){try{const r=await fetch('/api/msgs');const m=await r.json();rd(m)}catch{}}
-function rd(ms){const el=$('fd');if(!ms.length){el.innerHTML='<div style="text-align:center;color:var(--f3);padding:40px 0;font-size:12px">还没有留言</div>';return}
-el.innerHTML=ms.map(m=>`<div class="pt"><div class="pm"><span class="nn">${esc(m.name||'匿名')}</span><span class="tt">${ta(m.time)}</span></div><div class="ct">${esc(m.content)}</div><div class="pa"><button onclick="lk(${m._id},this)">♡ ${m.likes||0}</button><button onclick="tr(${m._id})">回复</button><button onclick="dm(${m._id})">✕</button></div><div class="rp" id="rp-${m._id}"></div><div class="ri" id="ri-${m._id}" style="display:none"><input id="rn-${m._id}" placeholder="回复…"><button onclick="sr(${m._id})">回复</button></div></div>`).join('');
+function rd(ms){const el=$('fd');if(!ms.length){el.innerHTML='<div class="em">还没有留言</div>';return}
+el.innerHTML=ms.map(m=>`<div class="pt"><div class="pm"><span class="nn">${esc(m.name||'匿名')}</span><span class="tt" title="${fmt(m.time)}">${ta(m.time)}</span></div><div class="ct">${esc(m.content)}</div><div class="pa"><button onclick="lk(${m._id},this)">♡ ${m.likes||0}</button><button onclick="tr(${m._id})">回复</button><button onclick="dm(${m._id})">✕</button></div><div class="rp" id="rp-${m._id}"></div><div class="ri" id="ri-${m._id}" style="display:none"><input id="rn-${m._id}" placeholder="回复…"><button onclick="sr(${m._id})">回复</button></div></div>`).join('');
 ms.forEach(m=>lr(m._id))}
 async function sd(){const n=$('n').value.trim(),c=$('c').value.trim();if(!c)return;const b=$('s');b.disabled=true;b.textContent='…';try{const r=await fetch('/api/msgs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,content:c})});if(r.status==403){const d=await r.json();ts(d.error);return}if(!r.ok){ts('失败');return}$('n').value='';$('c').value='';$('cc').textContent='0';ld()}catch{ts('网络错误')}finally{b.disabled=false;b.textContent='发布'}}
 async function lk(id,btn){try{const r=await fetch(`/api/msgs/${id}/like`,{method:'POST'});if(!r.ok)return;const d=await r.json();btn.innerHTML='❤ '+d.likes}catch{}}
-async function dm(id){if(!confirm('确认？'))return;try{await fetch(`/api/msgs/${id}`,{method:'DELETE'});document.getElementById(`p-${id}`).remove()}catch{}}
-function tr(id){const el=$(`ri-${id}`);el.style.display=el.style.display=='none'?'flex':'none'}
-async function lr(id){try{const r=await fetch(`/api/msgs/${id}/replies`);const l=await r.json();const el=$(`rp-${id}`);if(!l.length)return;el.innerHTML=l.map(x=>`<div class="i"><span style="color:var(--ac);font-size:10px">${esc(x.name||'匿名')}</span> <span style="font-size:9px;color:var(--f3)">${ta(x.time)}</span><div style="font-size:11px">${esc(x.content)}</div></div>`).join('')}catch{}}
+async function dm(id){if(!confirm('确认删除？'))return;try{await fetch(`/api/msgs/${id}`,{method:'DELETE'});location.reload()}catch{}}
+function tr(id){const el=$(id?`ri-${id}`:'x');if(!id)return;el.style.display=el.style.display=='none'?'flex':'none'}
+async function lr(id){try{const r=await fetch(`/api/msgs/${id}/replies`);const l=await r.json();const el=$(`rp-${id}`);if(!l.length)return;el.innerHTML=l.map(x=>`<div class="i"><span style="color:#4a6cf7;font-size:12px">${esc(x.name||'匿名')}</span> <span style="font-size:11px;color:#aaa">${ta(x.time)}</span><div>${esc(x.content)}</div></div>`).join('')}catch{}}
 async function sr(id){const inp=$(`rn-${id}`);if(!inp.value.trim())return;try{await fetch(`/api/msgs/${id}/replies`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:inp.value.trim()})});inp.value='';lr(id)}catch{}}
 </script>
 </body>
